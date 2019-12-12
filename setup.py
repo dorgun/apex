@@ -2,7 +2,6 @@ import torch
 from setuptools import setup, find_packages
 import subprocess
 
-from pip._internal import main as pipmain
 import sys
 import warnings
 import os
@@ -30,17 +29,6 @@ if TORCH_MAJOR == 0 and TORCH_MINOR < 4:
 
 cmdclass = {}
 ext_modules = []
-
-if "--pyprof" in sys.argv:
-    with open('requirements.txt') as f:
-        required_packages = f.read().splitlines()
-        pipmain(["install"] + required_packages)
-    try:
-        sys.argv.remove("--pyprof")
-    except:
-        pass
-else:
-    warnings.warn("Option --pyprof not specified. Not installing PyProf dependencies!")
 
 if "--cpp_ext" in sys.argv or "--cuda_ext" in sys.argv:
     if TORCH_MAJOR == 0:
@@ -206,6 +194,13 @@ setup(
                                     'tests',
                                     'examples',
                                     'apex.egg-info',)),
+    install_requires=[
+        'cxxfilt>=0.2.0',
+        'tqdm>=4.28.1',
+        'numpy>=1.15.3',
+        'PyYAML>=5.1',
+        'pytest>=3.5.1'
+    ],
     description='PyTorch Extensions written by NVIDIA',
     ext_modules=ext_modules,
     cmdclass=cmdclass,
